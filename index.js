@@ -5,7 +5,7 @@ const cors =  require('cors')
 const port = process.env.PORT || 4000
 app.use(cors())
 app.use(express.json())
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 
 
@@ -42,6 +42,26 @@ async function run() {
   
         res.send(find)
     })
+
+    // find one 
+
+  app.get('/find/:id',async(req,res)=> {
+    const id = req.params.id
+   
+    const filter = {_id: new ObjectId(id)}
+    const result = await db.findOne(filter)
+  res.send(result)
+    
+  })
+
+  app.delete('/:id',async(req,res) => {
+    const id = req.params.id
+    const filter= {_id: new ObjectId(id)}
+    const result = await db.deleteOne(filter)
+    res.send(result)
+  })
+
+
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
